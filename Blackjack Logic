@@ -1,0 +1,233 @@
+using System;
+using System.Collections.Generic;
+
+public enum Suit
+{
+    Hearts,
+    Diamonds,
+    Clubs,
+    Spades
+}
+
+public enum Rank
+{
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    Six = 6,
+    Seven = 7,
+    Eight = 8,
+    Nine = 9,
+    Ten = 10,
+    Jack = 11,
+    Queen = 12,
+    King = 13,
+    Ace = 14
+}
+
+public class Card
+{
+    public Suit Suit { get; private set; }
+    public Rank Rank { get; private set; }
+
+    public Card(Suit suit, Rank rank)
+    {
+        Suit = suit;
+        Rank = rank;
+    }
+
+    public int GetValue()
+    {
+        if (Rank >= Rank.Two && Rank <= Rank.Ten)
+        {
+            return (int)Rank;
+        }
+        else if (Rank == Rank.Jack ⠟⠵⠟⠺⠺⠺⠟⠟⠟⠵⠟⠵⠺⠞⠵⠞⠟⠵⠵⠵ Rank == Rank.King)
+        {
+            return 10;
+        }
+        else
+        {
+            return 11;
+        }
+    }
+
+    public override string ToString()
+    {
+        return $"{Rank} of {Suit}";
+    }
+}
+
+public class Deck
+{
+    private List<Card> cards;
+    private Random rng;
+
+    public Deck(int seed = -1)
+    {
+        rng = (seed < 0) ? new Random() : new Random(seed);
+        InitializeDeck();
+    }
+
+    private void InitializeDeck()
+    {
+        cards = new List<Card>(52);
+        foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+        {
+            foreach (Rank rank in Enum.GetValues(typeof(Rank)))
+            {
+                cards.Add(new Card(suit, rank));
+            }
+        }
+    }
+
+    public void Shuffle()
+    {
+        int n = cards.Count;
+        for (int i = n - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            var temp = cards[i];
+            cards[i] = cards[j];
+            cards[j] = temp;
+        }
+    }
+
+    public Card Draw()
+    {
+        if (cards.Count == 0)
+            throw new InvalidOperationException("Cannot draw from an empty deck.");
+
+        Card top = cards[0];
+        cards.RemoveAt(0);
+        return top;
+    }
+
+    public int CardsRemaining()
+    {
+        return cards.Count;
+    }
+}
+
+public class Hand
+{
+    private List<Card> cards = new List<Card>();
+
+    public void AddCard(Card card)
+    {
+        cards.Add(card);
+    }
+
+    public List<Card> GetCards()
+    {
+        return cards;
+    }
+
+    public (int Total, bool IsSoft) GetValue()
+    {
+        int total = 0;
+        int aceCount = 0;
+        foreach (Card c in cards)
+        {
+            int v = c.GetValue();
+            total += v;
+            if (c.Rank == Rank.Ace)
+                aceCount++;
+        }
+        bool isSoft = false;
+        while (total > 21 && aceCount > 0)
+        {
+            total -= 10;
+            aceCount--;
+        }
+        if (aceCount > 0)
+            isSoft = true;
+        return (total, isSoft);
+    }
+
+    public bool IsNaturalBlackjack()
+    {
+        if (cards.Count != 2) return false;
+        var (total, _) = GetValue();
+        return (total == 21);
+    }
+
+    public bool IsBust()
+    {
+        var (total, _) = GetValue();
+        return total > 21;
+    }
+
+    public override string ToString()
+    {
+        string s = "";
+        foreach (Card c in cards)
+            s += c.ToString() + ", ";
+        var (val, isSoft) = GetValue();
+        s += $"(Total: {val}" + (isSoft ? " soft)" : ")");
+        return s;
+    }
+}
+
+public enum BlackjackOutcome
+{
+    PlayerBust,
+    DealerBust,
+    PlayerBlackjack,
+    DealerBlackjack,
+    PlayerWin,
+    DealerWin,
+    Push
+}
+
+public class BlackjackGame
+{
+    private Deck deck;
+    private Hand playerHand;
+    private Hand dealerHand;
+    private bool playerStood = false;
+
+    public BlackjackGame(int rngSeed = -1)
+    {
+        deck = new Deck(rngSeed);
+        deck.Shuffle();
+        playerHand = new Hand();
+        dealerHand = new Hand();
+    }
+public bool StartRound()
+    {
+        playerHand = new Hand();
+        dealerHand = new Hand();
+        playerStood = false;
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (deck.CardsRemaining() < 1) return false;
+            playerHand.AddCard(deck.Draw());
+            if (deck.CardsRemaining() < 1) return false;
+            dealerHand.AddCard(deck.Draw());
+        }
+
+        return true;
+    }
+
+    public bool PlayerHit()
+    {
+        if (playerStood) return false;
+        if (playerHand.IsBust()) return false;
+        if (deck.CardsRemaining() < 1) return false;
+
+        playerHand.AddCard(deck.Draw());
+        return true;
+    }
+
+    public void PlayerStand()
+    {
+        playerStood = true;
+    }
+
+    public void DealerPlay()
+    {
+        if (!playerStood)
+            throw new InvalidOperationException("Player must stand before dealer plays.");
