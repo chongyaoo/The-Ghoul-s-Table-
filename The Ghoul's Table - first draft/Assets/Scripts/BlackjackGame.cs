@@ -14,6 +14,16 @@ public class BlackjackGame
         return playerHand;
     }
 
+    public int GetPlayerHandCount()
+    {
+        return playerHand.NumCards();
+    }
+
+    public int GetDealerHandCount()
+    {
+        return dealerHand.NumCards();
+    }
+
     public Hand GetDealerHand()
     {
         return dealerHand;
@@ -53,14 +63,15 @@ public class BlackjackGame
         Debug.Log("Testing draw " + drawn);
         return drawn;
     }
-    public bool PlayerHit()
+    public Card PlayerHit()
     {
-        if (playerStood) return false;
-        if (playerHand.IsBust()) return false;
-        if (deck.CardsRemaining() < 1) return false;
+        if (playerStood) return null;
+        if (playerHand.IsBust()) return null;
+        if (deck.CardsRemaining() < 1) return null;
 
-        playerHand.AddCard(deck.Draw());
-        return true;
+        Card drawn = deck.Draw();
+        playerHand.AddCard(drawn);
+        return drawn;
     }
 
     public void PlayerStand()

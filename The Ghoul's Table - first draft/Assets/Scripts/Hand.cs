@@ -10,6 +10,11 @@ public class Hand
         cards.Add(card);
     }
 
+    public int NumCards()
+    {
+        return cards.Count;
+    }
+    
     public List<Card> GetCards()
     {
         return cards;

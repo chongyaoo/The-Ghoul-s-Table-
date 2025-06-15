@@ -30,6 +30,7 @@ public class CardView : MonoBehaviour
     {
         isRevealed = true;
         // Could trigger flip animation or show the card
+        // Could trigger flip animation or show the card
         if (cardAnimator != null)
             cardAnimator.SetBool("Revealed", true);
     }
