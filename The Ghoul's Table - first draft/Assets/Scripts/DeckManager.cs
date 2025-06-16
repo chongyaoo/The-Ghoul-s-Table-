@@ -1,14 +1,12 @@
 using UnityEngine;
-using UnityEngine;
 using System.Collections.Generic;
 
 public class DeckManager : MonoBehaviour
 {
     [SerializeField] private CardView[] allCardPrefabs = new CardView[52]; // Drag all 52 prefabs here
     [SerializeField] private Transform deckPosition; // Where cards are stacked
-    [SerializeField] private float cardStackOffset = 0.001f; // Small offset between stacked cards
 
-    private List<CardView> activeCards = new List<CardView>();
+    private readonly List<CardView> activeCards = new(); //simplified version. readonly will not be changed in the code
 
     //void Start()
     //{
@@ -49,7 +47,10 @@ public class DeckManager : MonoBehaviour
             return null;
 
         // Instantiate the specific card prefab 
-        CardView cardView = Instantiate (prefab, deckPosition.position, deckPosition.rotation);
+        Quaternion originalRotation = deckPosition.rotation;
+        originalRotation *= Quaternion.Euler(90f, 0f, 0f);
+        
+        CardView cardView = Instantiate (prefab, deckPosition.position, originalRotation);
         cardView.Initialize(drawnCard);
 
         activeCards.Add(cardView);
