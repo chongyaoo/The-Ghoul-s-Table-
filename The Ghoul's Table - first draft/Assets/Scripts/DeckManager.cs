@@ -6,7 +6,7 @@ public class DeckManager : MonoBehaviour
     [SerializeField] private CardView[] allCardPrefabs = new CardView[52]; // Drag all 52 prefabs here
     [SerializeField] private Transform deckPosition; // Where cards are stacked
 
-    private readonly List<CardView> activeCards = new(); //simplified version. readonly will not be changed in the code
+    private List<CardView> activeCards = new(); //simplified version. readonly will not be changed in the code
 
     //void Start()
     //{
@@ -19,6 +19,14 @@ public class DeckManager : MonoBehaviour
     //    logicalDeck.Shuffle();
     //}
 
+    public List<CardView> ActiveCards()
+    {
+        return activeCards;
+    }
+    public void DestroyActiveCards()
+    {
+        activeCards = new List<CardView>();
+    }
     private CardView FindCardPrefab(Suit suit, Rank rank)
     {
         foreach (CardView prefab in allCardPrefabs)
@@ -37,7 +45,7 @@ public class DeckManager : MonoBehaviour
         CardView cardView = Instantiate (prefab, deckPosition.position, deckPosition.rotation);
         cardView.Initialize(card);
         return cardView;
-    }
+    } //this might not be needed
 
     public CardView DrawCardPrefab(Card drawnCard)
     {
@@ -53,8 +61,8 @@ public class DeckManager : MonoBehaviour
         CardView cardView = Instantiate (prefab, deckPosition.position, originalRotation);
         cardView.Initialize(drawnCard);
 
-        activeCards.Add(cardView);
-        return cardView;
+        activeCards.Add(cardView); 
+        return cardView; 
     }
 
     //private CardView LoadCardPrefab(Suit suit, Rank rank)

@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
+using System.Xml.Schema;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class BlackjackGame
 {
-    private Deck deck;
+    private readonly Deck deck;
     private Hand playerHand;
     private Hand dealerHand;
     private bool playerStood = false;
@@ -74,14 +76,54 @@ public class BlackjackGame
         return drawn;
     }
 
+    public Card DealerHit()
+    {
+        if (dealerHand.IsBust()) return null;
+        if (deck.CardsRemaining() < 1) return null;
+
+        Card drawn = deck.Draw();
+        dealerHand.AddCard(drawn);
+        return drawn;
+    }
+
     public void PlayerStand()
     {
         playerStood = true;
     }
 
-    public void DealerPlay()
+    public bool DealerPlay()
     {
+        bool dealerplayed = false;
         if (!playerStood)
             throw new InvalidOperationException("Player must stand before dealer plays.");
+        (int total, bool isSoft) = dealerHand.GetValue();
+        while (total < 17 || (total == 17 && isSoft)) //dealer hits on soft17
+        {
+            DealerHit();
+            dealerplayed = true;
+            (total, isSoft) = dealerHand.GetValue();
+        }
+        return dealerplayed;
+    }
+
+    public BlackjackOutcome DetermineOutcome()
+    {
+        if (playerHand.IsNaturalBlackjack() && dealerHand.IsNaturalBlackjack())
+            return BlackjackOutcome.Push;
+        else if (playerHand.IsNaturalBlackjack())
+            return BlackjackOutcome.PlayerBlackjack;
+        else if (dealerHand.IsNaturalBlackjack())
+            return BlackjackOutcome.DealerBlackjack;
+        (int playerTotal, bool playerIsSoft) = playerHand.GetValue();
+        (int dealerTotal, bool dealerIsSoft) = dealerHand.GetValue();
+        if (playerTotal > 21)
+            return BlackjackOutcome.PlayerBust;
+        else if (dealerTotal > 21)
+            return BlackjackOutcome.DealerBust;
+        else if (dealerTotal < playerTotal)
+            return BlackjackOutcome.PlayerWin;
+        else if (dealerTotal > playerTotal)
+            return BlackjackOutcome.DealerWin;
+        return BlackjackOutcome.Push;
     }
 };

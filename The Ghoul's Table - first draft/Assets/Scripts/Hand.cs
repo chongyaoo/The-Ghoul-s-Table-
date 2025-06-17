@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class Hand
 {
-    private List<Card> cards = new List<Card>();
-
+    private readonly List<Card> cards = new();
     public void AddCard(Card card)
     {
         cards.Add(card);

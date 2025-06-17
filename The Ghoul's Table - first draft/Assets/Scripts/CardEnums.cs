@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 public enum Suit
 {
@@ -33,4 +34,18 @@ public enum BlackjackOutcome
     PlayerWin,
     DealerWin,
     Push
+}
+
+public static class OutcomeText
+{
+    public static readonly Dictionary<BlackjackOutcome, string> OutcomeToText = new()
+    {
+        {BlackjackOutcome.PlayerBust, "You busted... a big one!" },
+        {BlackjackOutcome.DealerBust, "He busted... a big one!" },
+        {BlackjackOutcome.PlayerBlackjack, "You Blackjack!" },
+        {BlackjackOutcome.DealerBlackjack, "Dealer Blackjack!" },
+        {BlackjackOutcome.PlayerWin, "You win!" },
+        {BlackjackOutcome.DealerWin, "Dealer win!" },
+        {BlackjackOutcome.Push, "Push!" }
+    };
 }
