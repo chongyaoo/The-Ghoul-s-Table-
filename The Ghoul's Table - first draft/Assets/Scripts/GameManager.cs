@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +45,7 @@ public class BlackjackGameManager : MonoBehaviour
             dealerCardView.transform.SetParent(dealerArea, worldPositionStays: true);
             dealerPosition.x -= i * cardOffset;
             dealerPosition.z += i * cardzOffset;
+            LeanTween.move(dealerCardView.gameObject, dealerPosition, 1.0f).setEase(LeanTweenType.easeInOutQuad);
             LeanTween.move(dealerCardView.gameObject, dealerPosition, 1.0f).setEase(LeanTweenType.easeInOutQuad);
             LeanTween.rotate(dealerCardView.gameObject, new Vector3(0, 0, 0), 1.0f).setEase(LeanTweenType.easeInOutQuad);
             yield return new WaitForSeconds(1f);
