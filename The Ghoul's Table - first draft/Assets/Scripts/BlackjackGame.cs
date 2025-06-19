@@ -36,7 +36,7 @@ public class BlackjackGame
         deck.Shuffle();
         playerHand = new Hand();
         dealerHand = new Hand();
-    }
+    } // call this again for a new Blackjack game
 
     public bool StartRound()
     {

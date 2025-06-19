@@ -11,7 +11,6 @@ public class CardView : MonoBehaviour
 
     // For 3D models, you might want to control visibility or animations
     [SerializeField] private GameObject cardModel;
-    [SerializeField] private Animator cardAnimator; // Optional: for flip animations
 
     private bool isRevealed = false;
 
@@ -31,22 +30,16 @@ public class CardView : MonoBehaviour
         isRevealed = true;
         // Could trigger flip animation or show the card
         // Could trigger flip animation or show the card
-        if (cardAnimator != null)
-            cardAnimator.SetBool("Revealed", true);
     }
 
     public void Hide()
     {
         isRevealed = false;
         // Could trigger hide animation or show card back
-        if (cardAnimator != null)
-            cardAnimator.SetBool("Revealed", false);
     }
 
     public void FlipCard()
     {
         isRevealed = !isRevealed;
-        if (cardAnimator != null)
-            cardAnimator.SetBool("Revealed", isRevealed);
     }
 }
