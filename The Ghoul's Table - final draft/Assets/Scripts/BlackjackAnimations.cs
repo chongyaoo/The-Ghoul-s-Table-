@@ -10,7 +10,20 @@ public class BlackjackAnimations : MonoBehaviour
     [SerializeField] private float cardOffset = 0.5f; //offset between x position of cards
     [SerializeField] private float cardzOffset = 0.2f;
 
+    [SerializeField] private Animator coltAnimator;
+
+    [SerializeField] private Animator cameraAnimator;
+
     [SerializeField] private BlackjackGameManager gameManager;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            coltAnimator.SetTrigger("loadbullet");
+        if (Input.GetKeyDown(KeyCode.Q))
+            cameraAnimator.SetTrigger("lookdownandup");
+    }
+
     public IEnumerator StartRoundAnimations(List<CardView> initialCards)
     {
         yield return new WaitForSeconds(1f);
