@@ -26,7 +26,8 @@ public class PlayerInteract : MonoBehaviour
     {
         playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * distance);
+        Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
+        Debug.Log("ray here");
         RaycastHit hitInfo; //sotre collide info
         if (Physics.Raycast(ray, out hitInfo, distance, mask))
         {

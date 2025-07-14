@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI promptText;
+    [SerializeField] private TMP_Text promptText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

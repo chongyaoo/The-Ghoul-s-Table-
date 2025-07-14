@@ -26,10 +26,16 @@ public class BlackjackGameManager : MonoBehaviour
     [SerializeField] private Button shootDealerButton = null!;
     [SerializeField] private Button keepWinningsButton = null!;
 
+    [SerializeField] private TMP_Text keepWinningsText = null!;
+
     [SerializeField] private float cardOffset = 0.5f; //offset between x position of cards
     [SerializeField] private float cardzOffset = 0.2f;
 
-    private readonly BlackjackOutcome blackjackOutcome;
+    private BlackjackOutcome blackjackOutcome;
+    public BlackjackOutcome BlackjackOutcome => blackjackOutcome;
+
+    private GameState gameState;
+    public GameState GameState => gameState;
 
     public Transform PlayerArea => playerArea;
     public Transform DealerArea => dealerArea;
@@ -49,15 +55,17 @@ public class BlackjackGameManager : MonoBehaviour
             dealerCardView.transform.SetParent(dealerArea, worldPositionStays: true);
         }
         yield return StartCoroutine(animations.StartRoundAnimations(initialCards));
-        EnableButton(true);
+        //EnableButton(true);
         if (game.GetPlayerHand().IsNaturalBlackjack())
             StartCoroutine(EndGame());
         else 
             statusText.text = "Your turn!";
+        gameState = GameState.Waiting;
     }
 
     private IEnumerator PlayerDrawAnimation()
     {
+        gameState = GameState.Drawing;
         Card? drawnCard = game.PlayerHit();
         CardView cardView = deckManager.DrawCardPrefab(drawnCard);
         int playerHandCount = game.GetPlayerHandCount();
@@ -66,12 +74,16 @@ public class BlackjackGameManager : MonoBehaviour
         {
             StartCoroutine(EndGame());
         }
-        else 
-            EnableButton(true);
+        else
+        {
+            //EnableButton(true);
+            gameState = GameState.Waiting;
+        }
     }
 
     private IEnumerator DealerDrawAnimation(int numCardDrawn)
     {
+        gameState = GameState.Drawing;
         Hand dealerHand = game.GetDealerHand();
         List<CardView> cardsDrawn = new();
         for (int i = 0; i < numCardDrawn; i++)
@@ -89,6 +101,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         yield return StartCoroutine(animations.DealerFlipAnimation());
         BlackjackOutcome gameOutcome = game.DetermineOutcome();
+        blackjackOutcome = gameOutcome;
         Debug.Log("The game outcome is " + gameOutcome);
         DisplayOutcome(gameOutcome);
     }
@@ -101,6 +114,7 @@ public class BlackjackGameManager : MonoBehaviour
     private IEnumerator GameStart()
     {
         statusText.text = "Game Starting!";
+        gameState = GameState.Drawing;
         yield return new WaitForSeconds(1f);
         statusText.text = "Drawing cards...";
         StartCoroutine(StartRoundAnimations());
@@ -108,11 +122,12 @@ public class BlackjackGameManager : MonoBehaviour
 
     void Start()
     {
-        EnableButton(false);
+        //EnableButton(false);
         EnableNewGameButton(false);
-        EnableBets(true); //StartRound() is in PlayerLockBets(), because round starts only after bets are placed
-        lockInBetsButton.interactable = false;
-        EnableWinChoices(false);
+        //EnableBets(true); //StartRound() is in PlayerLockBets(), because round starts only after bets are placed
+        //lockInBetsButton.interactable = false;
+       // EnableWinChoices(false);
+        gameState = GameState.Betting;
         statusText.text = "Minimum Bet is: 20 bucks";
         if (betManager.PlayerWinnings == 0)
             Debug.Log("player has died here");
@@ -127,47 +142,47 @@ public class BlackjackGameManager : MonoBehaviour
             return;
         }
         betManager.PlayerBetOnce();
-        lockInBetsButton.interactable = true; //ensures minimum betting is 20bucks to start the round.
+        //lockInBetsButton.interactable = true; //ensures minimum betting is 20bucks to start the round.
     }
 
     public void PlayerLockBets()
     {
-        EnableBets(false);
+        //EnableBets(false);
         StartRound();
     }
-    void EnableButton(bool enable)
-    {
-        hitButton.gameObject.SetActive(enable);
-        standButton.gameObject.SetActive(enable);
-    }
+    //void EnableButton(bool enable)
+    //{
+    //    hitButton.gameObject.SetActive(enable);
+    //    standButton.gameObject.SetActive(enable);
+    //}
     void EnableNewGameButton(bool enable)
     {
         newGameButton.gameObject.SetActive(enable);
     }
 
-    private void EnableBets(bool enable)
-    {
-        bet20Button.interactable = enable;
-        lockInBetsButton.interactable = enable;
-    }
+    //private void EnableBets(bool enable)
+    //{
+    //    bet20Button.interactable = enable;
+    //    lockInBetsButton.interactable = enable;
+    //}
 
-    private void EnableWinChoices (bool enable)
-    {
-        shootDealerButton.gameObject.SetActive(enable);
-        keepWinningsButton.gameObject.SetActive(enable);
-    }
+    //private void EnableWinChoices (bool enable)
+    //{
+    //    shootDealerButton.gameObject.SetActive(enable);
+    //    keepWinningsButton.gameObject.SetActive(enable);
+    //}
 
     public void ShootDealer()
     {
         betManager.PlayerLoseOrShoot();
         Debug.Log("Player Shooting animation");
         //chain player shooting animation here
-        EnableWinChoices(false);
+        //EnableWinChoices(false);
         if (Shoot())
             PlayerWins();
         else
             statusText.text = "You failed to kill the Dealer.. play on.";
-        EnableNewGameButton(true);
+        //EnableNewGameButton(true);
     }
 
     public void KeepWinnings()
@@ -179,10 +194,11 @@ public class BlackjackGameManager : MonoBehaviour
         }
         else
         {
-            betManager.PlayerNatural(); //doesn't trigger????
+            betManager.PlayerNatural(); 
         }
-        EnableWinChoices(false);
+        //EnableWinChoices(false);
         EnableNewGameButton(true);
+        keepWinningsText.text = "";
     }
 
     public void StartRound()
@@ -201,14 +217,14 @@ public class BlackjackGameManager : MonoBehaviour
     public void PlayerHit()
     {
         Debug.Log("Player Hit!");
-        EnableButton(false);
+        //EnableButton(false);
         StartCoroutine(PlayerDrawAnimation());
     }
 
     public void PlayerStand() //dealer plays immediately after 
     {
         game.PlayerStand();
-        EnableButton(false);
+        //EnableButton(false);
         statusText.text = "Dealer's turn!";
         bool dealerplayed = game.DealerPlay();
         if (dealerplayed)
@@ -222,27 +238,30 @@ public class BlackjackGameManager : MonoBehaviour
 
     private IEnumerator EndGame()
     {
-        EnableButton(false);
+        //EnableButton(false);
         yield return StartCoroutine(DealerFlipAnimation());
         switch (game.DetermineOutcome())
         {
             case BlackjackOutcome.PlayerBust: //this does not control the bets yet
             case BlackjackOutcome.DealerWin:
                 StartCoroutine(DealerWinChoice());
+                gameState = GameState.EndGameLose;
                 break;
 
             case BlackjackOutcome.DealerBlackjack:
                 StartCoroutine(DealerBlackjack());
+                gameState = GameState.EndGameLose;
                 break;
 
             case BlackjackOutcome.Push:
                 StartCoroutine(Push());
+                gameState = GameState.EndGamePush;
                 break;
 
             case BlackjackOutcome.PlayerWin:
             case BlackjackOutcome.DealerBust:
             case BlackjackOutcome.PlayerBlackjack:
-                StartCoroutine(PauseForWinChoice());
+                StartCoroutine(PauseForWinChoice()); //gamestate changes in this coroutine
                 break;
         }
     }
@@ -297,8 +316,9 @@ public class BlackjackGameManager : MonoBehaviour
     private IEnumerator PauseForWinChoice() 
     {
         yield return new WaitForSeconds(2f);
-        EnableWinChoices(true);
+        //EnableWinChoices(true);
         statusText.text = "Pick your poison!";
+        gameState = GameState.EndGameWin;
     }
 
 
@@ -353,6 +373,11 @@ public class BlackjackGameManager : MonoBehaviour
         statusText.text = "You have killed the Dealer and won the grand prize!";
         betManager.PlayerWinRoulette();
         newGameButton.interactable = false;
+    }
+
+    private void Update()
+    {
+        Debug.Log(gameState);
     }
     //void Update()
     //{
