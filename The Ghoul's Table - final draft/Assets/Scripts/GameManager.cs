@@ -56,9 +56,9 @@ public class BlackjackGameManager : MonoBehaviour
         }
         yield return StartCoroutine(animations.StartRoundAnimations(initialCards));
         //EnableButton(true);
-        if (game.GetPlayerHand().IsNaturalBlackjack())
+        if (game.GetPlayerHand().IsNaturalBlackjack() || game.GetDealerHand().IsNaturalBlackjack())
             StartCoroutine(EndGame());
-        else 
+        else
             statusText.text = "Your turn!";
         gameState = GameState.Waiting;
     }
@@ -70,11 +70,16 @@ public class BlackjackGameManager : MonoBehaviour
         CardView cardView = deckManager.DrawCardPrefab(drawnCard);
         int playerHandCount = game.GetPlayerHandCount();
         yield return StartCoroutine(animations.PlayerDrawAnimation(cardView, playerHandCount));
+        (int total, bool isSoft) = game.GetPlayerHand().GetValue();
         if (game.GetPlayerHand().IsBust())
         {
             StartCoroutine(EndGame());
         }
-        else
+        else if (total == 21)
+        {
+            PlayerStand();
+        }
+        else 
         {
             //EnableButton(true);
             gameState = GameState.Waiting;
@@ -182,7 +187,7 @@ public class BlackjackGameManager : MonoBehaviour
             PlayerWins();
         else
             statusText.text = "You failed to kill the Dealer.. play on.";
-        //EnableNewGameButton(true);
+        EnableNewGameButton(true);
     }
 
     public void KeepWinnings()
