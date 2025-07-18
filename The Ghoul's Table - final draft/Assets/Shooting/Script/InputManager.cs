@@ -35,12 +35,12 @@ public class InputManager : MonoBehaviour
     {
         look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
     }
-    private void OnEnable ()
+    public void OnEnable ()
     {
         onFoot.Enable();
     }
 
-    private void OnDisable()
+    public void OnDisable()
     {
         onFoot.Disable();
     }
