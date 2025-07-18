@@ -1,0 +1,55 @@
+{
+    "version": 1,
+    "name": "GamePlayerInput",
+    "maps": [
+        {
+            "name": "OnFoot",
+            "id": "bf055fc3-50b0-4214-90ef-c473c89b53b7",
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "b4763cec-0872-425d-ba27-e38cdb62cb00",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "cd1bd90c-8aaf-4830-93bb-50229fb029e5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f35b1944-88e9-4da5-b407-9c952617484e",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9682e2ca-93da-4f00-ab33-628d2e300d89",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -27,6 +27,7 @@ public enum Rank
 
 public enum BlackjackOutcome
 {
+    None,
     PlayerBust,
     DealerBust,
     PlayerBlackjack,
@@ -34,6 +35,16 @@ public enum BlackjackOutcome
     PlayerWin,
     DealerWin,
     Push
+}
+
+public enum GameState
+{
+    Betting,
+    Drawing,
+    Waiting, 
+    EndGameWin,
+    EndGameLose,
+    EndGamePush
 }
 
 public static class OutcomeText
