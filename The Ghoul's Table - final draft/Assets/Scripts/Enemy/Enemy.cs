@@ -13,11 +13,10 @@ public class Enemy : MonoBehaviour
     public float fieldofView = 85f;
 
     public float eyeHeight;
-
-    private Vector3 lastKnownPos;
     public NavMeshAgent Agent => agent;
     public GameObject Player => player;
 
+    private Vector3 lastKnownPos;
     public Vector3 LastKnownPos {get => lastKnownPos; set => lastKnownPos = value; } //can access and assign new value to it
 
     [SerializeField] private string currentState; //for debugging??
@@ -64,5 +63,27 @@ public class Enemy : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void PanEnemy()
+    {
+        StartCoroutine(PanDealerToPlayer());
+    }
+
+    public IEnumerator PanDealerToPlayer()
+    {
+        Vector3 direction = player.transform.position - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Quaternion startRotation = transform.rotation;
+
+        float duration = 3f; // seconds (scaled by timeScale)
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / duration;
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            yield return null;
+        }
     }
 }
