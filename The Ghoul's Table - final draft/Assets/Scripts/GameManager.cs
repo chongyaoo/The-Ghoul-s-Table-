@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 #nullable enable
 
@@ -18,13 +19,7 @@ public class BlackjackGameManager : MonoBehaviour
     [SerializeField] private BetManager betManager = null!;
 
     private BlackjackGame game = null!;
-    [SerializeField] private Button hitButton = null!;
-    [SerializeField] private Button standButton = null!;
     [SerializeField] private Button newGameButton = null!;
-    [SerializeField] private Button bet20Button = null!;
-    [SerializeField] private Button lockInBetsButton = null!;
-    [SerializeField] private Button shootDealerButton = null!;
-    [SerializeField] private Button keepWinningsButton = null!;
 
     [SerializeField] private TMP_Text keepWinningsText = null!;
 
@@ -184,9 +179,15 @@ public class BlackjackGameManager : MonoBehaviour
         //chain player shooting animation here
         //EnableWinChoices(false);
         if (Shoot())
+        {
             PlayerWins();
+            gameState = GameState.EndGameShotKill;
+        }
         else
+        {
             statusText.text = "You failed to kill the Dealer.. play on.";
+            gameState = GameState.EndGameShotFail;
+        }
         EnableNewGameButton(true);
     }
 
@@ -286,13 +287,11 @@ public class BlackjackGameManager : MonoBehaviour
         if (choice < 0.5f)
         {
             betManager.Push(); //dealer shoots
-            statusText.text = "Dealer shoots!";
+            statusText.text = "Dealer puts you in the dungeons!";
             //chain animation to shooting dealer here
-            if (Shoot())
-                PlayerDies();
-            else
-                statusText.text = "Dealer failed to kill you.. play on.";
-            EnableNewGameButton(true);
+            yield return new WaitForSeconds(2f);
+            SceneManager.LoadScene("ShootingScene");
+            
         }
         else
         {
@@ -377,7 +376,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         statusText.text = "You have killed the Dealer and won the grand prize!";
         betManager.PlayerWinRoulette();
-        newGameButton.interactable = false;
+        EnableNewGameButton(false);
     }
 
     private void Update()
