@@ -40,7 +40,7 @@ public class PlayerLook : MonoBehaviour
 
         Quaternion startRotation = cam.transform.rotation;
 
-        float duration = 4f; // seconds (scaled by timeScale)
+        float duration = 2.5f; // seconds (scaled by timeScale)
         float t = 0f;
 
         while (t < 1f)

@@ -24,16 +24,17 @@ public class AttackState : BaseState
             //enemy.Agent.stoppingDistance = 2.5f;
             if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < 1.5f) //dealer has reached Player
             {
-                Debug.Log("Dealer has shot you");
                 TMP_Text statusText = enemy.Player.GetComponentInChildren<TMP_Text>();
-                statusText.text = "You have been shot!";
+                enemy.Player.GetComponent<InputManager>().Caught();
+                statusText.text = "You have been caught!";
                 //enemy.Player.GetComponent<CharacterController>().enabled = false;
                 enemy.Player.GetComponent<InputManager>().OnDisable();
                 enemy.Player.GetComponent<InputManager>().enabled = false; //disables the LateUpdate() of the inputmanager, which overwrites the rotation of the camera to the input (which would be zero rotation called late every frame)
                 Time.timeScale = 0.1f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale; // ensures physics still work
                 stateMachine.ChangeState(new StopState());
-                enemy.Player.GetComponent<PlayerLook>().PanCamera(enemy.transform);
+                Transform childTransform = enemy.transform.Find("Dealer");
+                enemy.Player.GetComponent<PlayerLook>().PanCamera(childTransform);
                 enemy.PanEnemy();
 
             }
