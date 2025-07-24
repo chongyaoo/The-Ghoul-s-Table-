@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 #nullable enable
 
@@ -18,17 +20,28 @@ public class BlackjackGameManager : MonoBehaviour
     [SerializeField] private BlackjackAnimations animations = null!;
     [SerializeField] private BetManager betManager = null!;
 
+    [SerializeField] private Canvas pauseCanvas;
+
     private BlackjackGame game = null!;
     [SerializeField] private Button newGameButton = null!;
 
+    [SerializeField] private Button pauseMainMenuButton = null!;
+
+    [SerializeField] private Button endGameMainMenuButton = null!;
+
     [SerializeField] private TMP_Text keepWinningsText = null!;
+
+    [SerializeField] private GameInputManager gameInputManager = null!;
 
     [SerializeField] private float cardOffset = 0.5f; //offset between x position of cards
     [SerializeField] private float cardzOffset = 0.2f;
 
+    [SerializeField] private Animator coltAnimator;
+
     private BlackjackOutcome blackjackOutcome;
     public BlackjackOutcome BlackjackOutcome => blackjackOutcome;
 
+    private GameState mostRecentGameState;
     private GameState gameState;
     public GameState GameState => gameState;
 
@@ -49,13 +62,18 @@ public class BlackjackGameManager : MonoBehaviour
             initialCards.Add(dealerCardView);
             dealerCardView.transform.SetParent(dealerArea, worldPositionStays: true);
         }
+        gameState = GameState.Drawing;
         yield return StartCoroutine(animations.StartRoundAnimations(initialCards));
         //EnableButton(true);
         if (game.GetPlayerHand().IsNaturalBlackjack() || game.GetDealerHand().IsNaturalBlackjack())
+        {
             StartCoroutine(EndGame());
+        }
         else
-            statusText.text = "Your turn!";
-        gameState = GameState.Waiting;
+        {
+            statusText.text = "Your turn";
+            gameState = GameState.Waiting;
+        }
     }
 
     private IEnumerator PlayerDrawAnimation()
@@ -72,6 +90,8 @@ public class BlackjackGameManager : MonoBehaviour
         }
         else if (total == 21)
         {
+            statusText.text = "Hit 21";
+            yield return new WaitForSeconds(1f);
             PlayerStand();
         }
         else 
@@ -102,7 +122,6 @@ public class BlackjackGameManager : MonoBehaviour
         yield return StartCoroutine(animations.DealerFlipAnimation());
         BlackjackOutcome gameOutcome = game.DetermineOutcome();
         blackjackOutcome = gameOutcome;
-        Debug.Log("The game outcome is " + gameOutcome);
         DisplayOutcome(gameOutcome);
     }
     private void DisplayOutcome(BlackjackOutcome outcome)
@@ -113,22 +132,43 @@ public class BlackjackGameManager : MonoBehaviour
 
     private IEnumerator GameStart()
     {
-        statusText.text = "Game Starting!";
+        statusText.text = "Let the games begin.";
         gameState = GameState.Drawing;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); //there is a break here. it doesnt continue on?
         statusText.text = "Drawing cards...";
         StartCoroutine(StartRoundAnimations());
     }
 
+    private void Awake()
+    {
+        BlackjackData data = SaveManager.Load();
+        if (data == null)
+        {
+            betManager.Restart(1000); //no progress saved so far
+        } 
+        else
+        {
+            if (data.hasBeenKilled)
+            {
+                PlayerDies();
+            }
+            else
+            {
+                betManager.Restart(data.playerWinnings);
+            }
+        }
+    }
     void Start()
     {
         //EnableButton(false);
         EnableNewGameButton(false);
+        EnableGameMainMenuButton(false);
         //EnableBets(true); //StartRound() is in PlayerLockBets(), because round starts only after bets are placed
         //lockInBetsButton.interactable = false;
-       // EnableWinChoices(false);
+        // EnableWinChoices(false);
+        pauseCanvas.gameObject.SetActive(false);
         gameState = GameState.Betting;
-        statusText.text = "Minimum Bet is: 20 bucks";
+        statusText.text = "Minimum Bet: $20";
         if (betManager.PlayerWinnings == 0)
             Debug.Log("player has died here");
 
@@ -138,7 +178,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         if (betManager.PlayerWinnings == 0)
         {
-            statusText.text = "Can't bet anymore!";
+            statusText.text = "Insufficient coins";
             return;
         }
         betManager.PlayerBetOnce();
@@ -160,6 +200,11 @@ public class BlackjackGameManager : MonoBehaviour
         newGameButton.gameObject.SetActive(enable);
     }
 
+    void EnableGameMainMenuButton (bool enable)
+    {
+        endGameMainMenuButton.gameObject.SetActive(enable);
+    }
+
     //private void EnableBets(bool enable)
     //{
     //    bet20Button.interactable = enable;
@@ -174,10 +219,13 @@ public class BlackjackGameManager : MonoBehaviour
 
     public void ShootDealer()
     {
-        betManager.PlayerLoseOrShoot();
-        Debug.Log("Player Shooting animation");
-        //chain player shooting animation here
-        //EnableWinChoices(false);
+        betManager.PlayerLoseOrShoot(); //once called on shootdealer(), should immediately remove cards from the table.
+        animations.RemoveCards();
+        gameState = GameState.Shooting;
+    }
+
+    public void ShootResult()
+    {
         if (Shoot())
         {
             PlayerWins();
@@ -185,12 +233,13 @@ public class BlackjackGameManager : MonoBehaviour
         }
         else
         {
-            statusText.text = "You failed to kill the Dealer.. play on.";
+            statusText.text = "You failed to kill The Ghoul.. play on.";
             gameState = GameState.EndGameShotFail;
+            coltAnimator.SetTrigger("ReturnColt");
+            EnableNewGameButton(true);
         }
-        EnableNewGameButton(true);
+       
     }
-
     public void KeepWinnings()
     {
         if (game.DetermineOutcome() == BlackjackOutcome.PlayerWin)
@@ -222,7 +271,6 @@ public class BlackjackGameManager : MonoBehaviour
 
     public void PlayerHit()
     {
-        Debug.Log("Player Hit!");
         //EnableButton(false);
         StartCoroutine(PlayerDrawAnimation());
     }
@@ -231,7 +279,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         game.PlayerStand();
         //EnableButton(false);
-        statusText.text = "Dealer's turn!";
+        statusText.text = "The Ghoul's turn";
         bool dealerplayed = game.DealerPlay();
         if (dealerplayed)
         {
@@ -275,7 +323,7 @@ public class BlackjackGameManager : MonoBehaviour
     private IEnumerator DealerBlackjack()
     {
         yield return new WaitForSeconds(2f);
-        statusText.text = "Dealer Keeps Winnings!";
+        statusText.text = "The Ghoul keeps winnings";
         betManager.PlayerLoseOrShoot();
         EnableNewGameButton(true);
     }
@@ -287,16 +335,20 @@ public class BlackjackGameManager : MonoBehaviour
         if (choice < 0.5f)
         {
             betManager.Push(); //dealer shoots
-            statusText.text = "Dealer puts you in the dungeons!";
+            statusText.text = "The Ghoul sends you into the dungeons...";
             //chain animation to shooting dealer here
-            yield return new WaitForSeconds(2f);
+            BlackjackData data = new BlackjackData();
+            data.playerWinnings = betManager.PlayerWinnings; //saving data for winnings
+            data.hasBeenKilled = false;
+            SaveManager.Save(data);
+            yield return new WaitForSeconds(2f); //after this, save the values before loading scene. the winnings values are correct now
             SceneManager.LoadScene("ShootingScene");
             
         }
         else
         {
             betManager.PlayerLoseOrShoot(); //dealer keeps winnings
-            statusText.text = "Dealer Keeps Winnings!";
+            statusText.text = "The Ghoul Keeps Winnings";
             EnableNewGameButton(true);
         }
     }
@@ -313,7 +365,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         betManager.Push();
-        statusText.text = "Keep your Winnings!";
+        statusText.text = "Keep your Bets";
         EnableNewGameButton(true);
     }
 
@@ -321,7 +373,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         //EnableWinChoices(true);
-        statusText.text = "Pick your poison!";
+        statusText.text = "Pick your poison";
         gameState = GameState.EndGameWin;
     }
 
@@ -367,21 +419,51 @@ public class BlackjackGameManager : MonoBehaviour
 
     private void PlayerDies()
     {
-        statusText.text = "You have lost your life! loser.";
+        statusText.text = "You have died at the hands of The Ghoul.";
         betManager.PlayerLostRoulette();
-        newGameButton.interactable = false;
+        EnableNewGameButton(false);
+        EnableGameMainMenuButton(true);
+        gameState = GameState.PlayerDied;
     }
 
     private void PlayerWins()
     {
-        statusText.text = "You have killed the Dealer and won the grand prize!";
+        statusText.text = "You have killed The Ghoul! Now run...";
         betManager.PlayerWinRoulette();
         EnableNewGameButton(false);
+        EnableGameMainMenuButton(true);
+        gameState = GameState.DealerDied;
     }
 
+    public void MainMenu()
+    {
+        SaveManager.DeleteSaved();
+        SceneManager.LoadScene("Main menu");
+        Time.timeScale = 1;
+    }
+
+    public void HandlePause()
+    {
+        if (pauseCanvas.gameObject.activeInHierarchy)
+        {
+            pauseCanvas.gameObject.SetActive(false);
+            gameState = mostRecentGameState;
+            Time.timeScale = 1;
+            gameInputManager.EnableInputs(true);
+        }
+        else
+        {
+            pauseCanvas.gameObject.SetActive(true);
+            mostRecentGameState = gameState;
+            gameState = GameState.Pause;
+            Time.timeScale = 0;
+            gameInputManager.EnableInputs(false);
+        }
+            
+    }
     private void Update()
     {
-        Debug.Log(gameState);
+        Debug.Log("Game State is " + gameState);
     }
     //void Update()
     //{

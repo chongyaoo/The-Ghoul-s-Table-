@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GameInputManager : MonoBehaviour
 {
+    [SerializeField] private BlackjackGameManager gameManager;
     private GamePlayerInput playerInput;
     private GamePlayerInput.OnFootActions onFoot;
 
@@ -18,6 +19,7 @@ public class GameInputManager : MonoBehaviour
         playerInput = new GamePlayerInput();
         onFoot = playerInput.OnFoot;
         look = GetComponent<GamePlayerLook>();
+        onFoot.Pause.performed += ctx => gameManager.HandlePause();
     }
 
     // Update is called once per frame
@@ -34,6 +36,20 @@ public class GameInputManager : MonoBehaviour
     private void OnEnable()
     {
         onFoot.Enable();
+    }
+
+    public void EnableInputs(bool enable)
+    {
+        if (enable)
+        {
+            onFoot.Look.Enable();
+            onFoot.Interact.Enable();
+        }
+        else
+        {
+            onFoot.Look.Disable();
+            onFoot.Interact.Disable();
+        }
     }
 
     private void OnDisable()

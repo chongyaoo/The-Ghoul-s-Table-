@@ -18,13 +18,11 @@ public abstract class GameInteractable : MonoBehaviour
     public void SetPromptText(TMP_Text input)
     {
         promptText = input;
-        Debug.Log("prompttext is set");
     }
 
     public void SetGameManager(BlackjackGameManager input)
     {
         gameManager = input;
-        Debug.Log("gamemanager is set");
     }
 
     public virtual void Hover()

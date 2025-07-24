@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class GamePlayerLook : MonoBehaviour
 {
@@ -24,27 +22,4 @@ public class GamePlayerLook : MonoBehaviour
         yRotation = Mathf.Clamp(yRotation, -45f, 45f);
         transform.localRotation = Quaternion.Euler(0, yRotation, 0);
     }
-
-    public void PanCamera(Transform enemy)
-    {
-        StartCoroutine(PanCameraToDealer(enemy));
-    }
-
-    public IEnumerator PanCameraToDealer(Transform dealerTransform)
-    {
-        Transform cam = Camera.main.transform;
-        Vector3 direction = (dealerTransform.position - cam.position).normalized;
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        float duration = 2f; // seconds (scaled by timeScale)
-        float t = 0f;
-
-        while (t < 1f)
-        {
-            t += Time.unscaledDeltaTime / duration;
-            cam.rotation = Quaternion.Slerp(cam.rotation, targetRotation, t);
-            yield return null;
-        }
-    }
-
 }

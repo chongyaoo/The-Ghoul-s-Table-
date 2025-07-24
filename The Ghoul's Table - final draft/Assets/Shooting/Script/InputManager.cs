@@ -62,7 +62,7 @@ public class InputManager : MonoBehaviour
     {
         look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
     }
-    public void OnEnable ()
+    private void OnEnable ()
     {
         onFoot.Enable();
     }

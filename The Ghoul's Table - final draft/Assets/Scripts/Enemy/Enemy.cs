@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
@@ -124,8 +125,6 @@ public class Enemy : MonoBehaviour
 
         targetRotation = Quaternion.Euler(targetEuler); //fixing the x component (vertical component) to have no rotation (no yaw). i think navmeshagent only allows plane rotation (y-z) along the floor plane, which updates after the coroutine panning, causing it to snap back downwards (revert the x direction). hence, we do not allow rotation in the x direction at all.
 
-        Debug.DrawRay(transform.position, direction * 20f, Color.green, 20f);
-
         float duration = 1.5f; // seconds (scaled by timeScale)
         float t = 0f;
 
@@ -152,5 +151,12 @@ public class Enemy : MonoBehaviour
         Agent.speed = 0;
         Agent.isStopped = true;
         Agent.velocity = Vector3.zero;
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void EndGame()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

@@ -19,7 +19,7 @@ public class AttackState : BaseState
         if (enemy.CanSeePlayer())
         {
             losePlayerTimer = 0;
-            enemy.Agent.speed = 6f;
+            enemy.Agent.speed = 6.5f;
             enemy.Agent.SetDestination(enemy.Player.transform.position);
             //enemy.Agent.stoppingDistance = 2.5f;
             if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < 1.5f) //dealer has reached Player
