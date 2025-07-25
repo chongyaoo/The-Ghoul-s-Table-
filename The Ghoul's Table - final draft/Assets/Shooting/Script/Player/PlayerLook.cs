@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerLook : MonoBehaviour
 {
@@ -22,5 +24,30 @@ public class PlayerLook : MonoBehaviour
 
         //rotate player to look left and right
         transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
+    }
+
+    public void PanCamera(Transform enemy)
+    {
+        StartCoroutine(PanCameraToDealer(enemy));
+    }
+
+    public IEnumerator PanCameraToDealer(Transform dealerTransform)
+    {
+        Debug.Log("Panning to dealer now");
+        Vector3 direction = dealerTransform.position - cam.transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Debug.DrawRay(cam.transform.position, direction * 20f, Color.blue, 20f);
+
+        Quaternion startRotation = cam.transform.rotation;
+
+        float duration = 2.5f; // seconds (scaled by timeScale)
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / duration;
+            cam.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            yield return null;
+        }
     }
 }

@@ -20,13 +20,20 @@ public class BetManager : MonoBehaviour
     [SerializeField] private TMP_Text betsText;
     public void Start()
     {
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
+    }
+
+    public void Restart(int winnings)
+    {
+        playerWinnings = winnings;
+        playerBet = 0;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
     }
     public void PlayerBetOnce()
     {
         playerBet += 20;
         playerWinnings -= 20;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
 
         Vector3 randomOffset = new Vector3(Random.Range(-0.01f, 0.01f), numChips * yoffSet, Random.Range(-0.01f, 0.01f));
         Vector3 spawnPosition = chipArea.position + randomOffset;
@@ -45,7 +52,7 @@ public class BetManager : MonoBehaviour
     {
         playerWinnings += playerBet * 2;
         playerBet = 0;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
         foreach (Transform child in chipPlacing)
             Destroy (child.gameObject);
         numChips = 0;
@@ -54,7 +61,7 @@ public class BetManager : MonoBehaviour
     public void PlayerLoseOrShoot()
     { 
         playerBet = 0;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
         foreach (Transform child in chipPlacing)
             Destroy(child.gameObject);
         numChips = 0;
@@ -64,7 +71,7 @@ public class BetManager : MonoBehaviour
     {
         playerWinnings += (playerBet/2) * 5;
         playerBet = 0;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
         foreach (Transform child in chipPlacing)
             Destroy(child.gameObject);
         numChips = 0;
@@ -74,7 +81,7 @@ public class BetManager : MonoBehaviour
     {
         playerWinnings += playerBet;
         playerBet = 0;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
         foreach (Transform child in chipPlacing)
             Destroy(child.gameObject);
         numChips = 0;
@@ -84,13 +91,13 @@ public class BetManager : MonoBehaviour
     {
         playerWinnings = 0;
         playerBet = 0;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
     }
 
     public void PlayerWinRoulette()
     {
         playerWinnings += 5000;
         playerBet = 0;
-        betsText.text = "Your Winnings: " + playerWinnings + "\nBets: " + playerBet;
+        betsText.text = "Your Winnings: $" + playerWinnings + "\nBets: $" + playerBet;
     }
 }

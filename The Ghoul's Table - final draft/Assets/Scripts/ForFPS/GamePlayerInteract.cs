@@ -24,7 +24,8 @@ public class GamePlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        //Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
         RaycastHit hitInfo;
         if (Physics.Raycast(ray, out hitInfo, distance, mask))

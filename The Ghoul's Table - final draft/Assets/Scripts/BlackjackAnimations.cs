@@ -10,19 +10,22 @@ public class BlackjackAnimations : MonoBehaviour
     [SerializeField] private float cardOffset = 0.5f; //offset between x position of cards
     [SerializeField] private float cardzOffset = 0.2f;
 
-    [SerializeField] private Animator coltAnimator;
+    //[SerializeField] private Animator coltAnimator; //i put the animator to the colt here 
 
-    [SerializeField] private Animator cameraAnimator;
+    //[SerializeField] private Animator cameraAnimator;
+
+    [SerializeField] private GameObject dealerArea;
+    [SerializeField] private GameObject playerArea;
 
     [SerializeField] private BlackjackGameManager gameManager;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            coltAnimator.SetTrigger("loadbullet");
-        if (Input.GetKeyDown(KeyCode.Q))
-            cameraAnimator.SetTrigger("lookdownandup");
-    }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //        coltAnimator.SetTrigger("loadbullet");
+    //    if (Input.GetKeyDown(KeyCode.Q))
+    //        cameraAnimator.SetTrigger("lookdownandup");
+    //}
 
     public IEnumerator StartRoundAnimations(List<CardView> initialCards)
     {
@@ -36,6 +39,7 @@ public class BlackjackAnimations : MonoBehaviour
             playerPosition.z -= i * cardzOffset;
             LeanTween.move(playerCardView.gameObject, playerPosition, 1.0f).setEase(LeanTweenType.easeInOutQuad);
             LeanTween.rotate(playerCardView.gameObject, new Vector3(0, 180, 0), 1.0f).setEase(LeanTweenType.easeInOutQuad);
+            playerCardView.gameObject.transform.SetParent(playerArea.transform);
             yield return new WaitForSeconds(1f);
             CardView dealerCardView = initialCards[i * 2 + 1];
             dealerPosition.x -= i * cardOffset;
@@ -44,6 +48,7 @@ public class BlackjackAnimations : MonoBehaviour
             LeanTween.move(dealerCardView.gameObject, dealerPosition, 1.0f).setEase(LeanTweenType.easeInOutQuad);
             LeanTween.rotate(dealerCardView.gameObject, new Vector3(0, 0, 0), 1.0f).setEase(LeanTweenType.easeInOutQuad);
             yield return new WaitForSeconds(1f);
+            dealerCardView.gameObject.transform.SetParent(dealerArea.transform);
         }
     }
 
@@ -54,6 +59,7 @@ public class BlackjackAnimations : MonoBehaviour
         playerPosition.z -= (playerHandCount - 1) * cardzOffset;
         LeanTween.move(cardDrawn.gameObject, playerPosition, 1.0f).setEase(LeanTweenType.easeInOutQuad);
         LeanTween.rotate(cardDrawn.gameObject, new Vector3(0, 180, 0), 1.0f).setEase(LeanTweenType.easeInOutQuad);
+        cardDrawn.gameObject.transform.SetParent(playerArea.transform);
         yield return new WaitForSeconds(1f);
     }
 
@@ -67,6 +73,7 @@ public class BlackjackAnimations : MonoBehaviour
             dealerPosition.z += (i + 2) * cardzOffset;
             LeanTween.move(cardDrawn.gameObject, dealerPosition, 1.0f).setEase(LeanTweenType.easeInOutQuad);
             LeanTween.rotate(cardDrawn.gameObject, new Vector3(0, 0, 0), 1.0f).setEase(LeanTweenType.easeInOutQuad);
+            cardDrawn.gameObject.transform.SetParent(dealerArea.transform); 
             yield return new WaitForSeconds(1f);
         }
     }
@@ -79,5 +86,17 @@ public class BlackjackAnimations : MonoBehaviour
             LeanTween.rotate(child.gameObject, new Vector3(0, 180, 0), 1.0f).setEase(LeanTweenType.easeInOutQuad);
         }
         yield return new WaitForSeconds(1f);
+    }
+
+    public void RemoveCards()
+    {
+        foreach (Transform child in playerArea.transform) 
+        {
+            child.gameObject.SetActive(false);
+        }
+        foreach (Transform child in dealerArea.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
     }
 }

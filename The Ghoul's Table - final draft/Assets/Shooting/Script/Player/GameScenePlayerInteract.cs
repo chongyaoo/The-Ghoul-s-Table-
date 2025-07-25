@@ -23,7 +23,7 @@ public class GameScenePlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerUI.UpdateText(string.Empty);
+        //playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
         RaycastHit hitInfo; //store collide info
@@ -32,7 +32,7 @@ public class GameScenePlayerInteract : MonoBehaviour
             if (hitInfo.collider.GetComponent<Interactable>() != null)
             {
                 Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
-                playerUI.UpdateText(interactable.promptMessage);
+                //playerUI.UpdateText(interactable.promptMessage);
                 if (inputManager.OnFoot.Interact.triggered)
                 {
                     interactable.BaseInteract();
