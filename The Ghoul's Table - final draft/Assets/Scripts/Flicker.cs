@@ -13,6 +13,8 @@ public class FlickerEffect : MonoBehaviour
     private float interval;
     private bool isOn;
 
+    private float nextTimeSoundAllowed = 0f;
+
     void Awake()
     {
         glow = GetComponent<GlowLight>();
@@ -26,12 +28,16 @@ public class FlickerEffect : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= interval)
         {
+            // Toggle glow light
             if (isOn) glow.turnOff();
             else glow.turnOn();
 
-            // Play flicker sound effect
-            if (audioSource.clip != null)
-                audioSource.Play();
+            // Play sound only if current time is beyond the clip's duration
+            if (audioSource.clip != null && Time.time >= nextTimeSoundAllowed)
+            {
+                audioSource.PlayOneShot(audioSource.clip, audioSource.volume);
+                nextTimeSoundAllowed = Time.time + audioSource.clip.length;
+            }
 
             isOn = !isOn;
             interval = isOn

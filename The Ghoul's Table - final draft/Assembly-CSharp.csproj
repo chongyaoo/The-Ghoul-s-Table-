@@ -61,6 +61,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.1.3f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\EntireGameScript.cs" />
     <Compile Include="Assets\Scripts\Bet20Button.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTest.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Setup\FriesPostProcessorIdentifier.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Assets\LeanTween\Testing\TestingSceneSwitching.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\PrefabGroup.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralSequencer.cs" />
+    <Compile Include="Assets\Scripts\Enemy\States\StopState.cs" />
     <Compile Include="Assets\Scripts\NewGameButton.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathBezier2d.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplinePerformance.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Assets\Scripts\ForFPS\Interactables\StandCoin.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\ArrayArrangement.cs" />
     <Compile Include="Assets\Scripts\BetManager.cs" />
+    <Compile Include="Assets\Scripts\GunEffects.cs" />
     <Compile Include="Assets\Scripts\Flicker.cs" />
     <Compile Include="Assets\Shooting\Script\GameSceneInputManager.cs" />
     <Compile Include="Assets\LeanTween\Testing\FollowingTests.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Assets\Shooting\Script\Interactables\Keypad.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingUnitTests.cs" />
     <Compile Include="Assets\LeanTween\Testing\TestingIssue2.cs" />
+    <Compile Include="Assets\Scripts\Enemy\States\PatrolState.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Inspector\IgnoreInInspectorAttribute.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Setup\SetupScriptBRP.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplineEndless.cs" />
@@ -98,8 +102,10 @@
     <Compile Include="Assets\LeanTween\Testing\Testing240.cs" />
     <Compile Include="Assets\LeanTween\Testing\Scripts\LeanPool.cs" />
     <Compile Include="Assets\Scripts\ForFPS\GamePlayerLook.cs" />
+    <Compile Include="Assets\Scripts\Enemy\States\BaseState.cs" />
     <Compile Include="Assets\LeanTween\Testing\PerformanceTests.cs" />
     <Compile Include="Assets\Shooting\Script\Player\GameScenePlayerInteract.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\MainMenuStart.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTween.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\FencePlacement.cs" />
     <Compile Include="Assets\Scripts\ForFPS\GameInputManager.cs" />
@@ -123,26 +129,33 @@
     <Compile Include="Assets\Scripts\StandButton.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplineTrack.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Inspector\KeyValuePairPropertyDrawer.cs" />
+    <Compile Include="Assets\Scripts\TriggerColt.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSpline.cs" />
+    <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\LeanTween\Testing\TestingSequencer.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\LogoCinematic.cs" />
+    <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
     <Compile Include="Assets\Scripts\Card.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralAdvancedTechniques.cs" />
+    <Compile Include="Assets\Scripts\Enemy\StateMachine.cs" />
     <Compile Include="Assets\Model\DealerScript.cs" />
     <Compile Include="Assets\Shooting\Script\Player\PlayerMotor.cs" />
+    <Compile Include="Assets\Scripts\Enemy\WayPath.cs" />
     <Compile Include="Assets\Scripts\ForFPS\Interactables\DeckOfCards.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Inspector\KiiValuePair.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\RotatableObject.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralEventsListeners.cs" />
     <Compile Include="Assets\Scripts\ForFPS\Interactables\GameInteractable.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\GlowLight.cs" />
+    <Compile Include="Assets\Scripts\Hover.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTweenExt.cs" />
     <Compile Include="Assets\Shooting\Script\Player\PlayerLook.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanAudio.cs" />
     <Compile Include="Assets\LeanTween\Framework\LTDescrOptional.cs" />
     <Compile Include="Assets\LeanTween\Testing\TestingIssue.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Inspector\AButtonAttribute.cs" />
+    <Compile Include="Assets\Scripts\FiringAnimation.cs" />
     <Compile Include="Assets\LeanTween\Testing\TestingOptionalCancel.cs" />
     <Compile Include="Assets\LeanTween\Framework\LTDescr.cs" />
     <Compile Include="Assets\Scripts\revolver script.cs" />
@@ -150,18 +163,23 @@
     <Compile Include="Assets\LeanTween\Testing\TestingColorTweening.cs" />
     <Compile Include="Assets\Scripts\CardView.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralSimpleUI.cs" />
+    <Compile Include="Assets\Scripts\Enemy\States\AttackState.cs" />
     <Compile Include="Assets\LeanTween\Testing\Testing243.cs" />
     <Compile Include="Assets\Shooting\Script\Player\GameScenePlayerLook.cs" />
+    <Compile Include="Assets\Scripts\Enemy\States\SearchState.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathBezier.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Setup\FriesManagerURP.cs" />
     <Compile Include="Assets\Shooting\Script\Player\PlayerInteract.cs" />
+    <Compile Include="Assets\Scripts\SavingGameData\SaveManager.cs" />
     <Compile Include="Assets\Shooting\Input\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\SavingGameData\BlackjackData.cs" />
     <Compile Include="Assets\Scripts\LockInBets.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\ForFPS\GamePlayerInput.cs" />
     <Compile Include="Assets\LeanTween\Testing\Testing246.cs" />
     <Compile Include="Assets\Shooting\Script\Interactable.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingZLegacyExt.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\ButtonHover.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSpline2d.cs" />
     <Compile Include="Assets\LeanTween\Framework\LTSeq.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Setup\FriesManagerBRP.cs" />
@@ -189,6 +207,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Fonts\License.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Fonts\OFL.txt" />
@@ -1277,8 +1296,16 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Collections.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Collections.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
