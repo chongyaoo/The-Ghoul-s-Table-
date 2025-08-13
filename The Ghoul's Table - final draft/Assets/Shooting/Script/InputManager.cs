@@ -2,9 +2,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class InputManager : MonoBehaviour
 {
+
+    private TMP_Text promptText;
 
     private PlayerInput playerInput;
     private PlayerInput.OnFootActions onFoot;
@@ -13,6 +16,7 @@ public class InputManager : MonoBehaviour
     private PlayerMotor motor;
     private PlayerLook look;
 
+    private bool isCaught = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -23,9 +27,32 @@ public class InputManager : MonoBehaviour
         look = GetComponent<PlayerLook>();
 
         onFoot.Jump.performed += ctx => motor.Jump();
+        promptText = GetComponentInChildren<TMP_Text>();
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        StartCoroutine(StartCounter());
+    }
+
+    private IEnumerator StartCounter()
+    {
+        int count = 45;
+        while (count > 0 && !isCaught)
+        {
+            promptText.text = "Stay Alive! " + count;
+            yield return new WaitForSeconds(1f);
+            count--;
+        }
+        if (!isCaught)
+            promptText.text = "You have made it!";
+    }
+
+    public void Caught()
+    {
+        isCaught = true;
+    }
+    
     void FixedUpdate()
     {
         motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
@@ -35,7 +62,7 @@ public class InputManager : MonoBehaviour
     {
         look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
     }
-    public void OnEnable ()
+    private void OnEnable ()
     {
         onFoot.Enable();
     }

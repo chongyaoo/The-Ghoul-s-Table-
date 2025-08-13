@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.AI;
 
 
 public class AttackState : BaseState
@@ -18,29 +19,35 @@ public class AttackState : BaseState
         if (enemy.CanSeePlayer())
         {
             losePlayerTimer = 0;
-            enemy.Agent.speed = 6f;
+            enemy.Agent.speed = 6.5f;
             enemy.Agent.SetDestination(enemy.Player.transform.position);
-            enemy.Agent.stoppingDistance = 2.5f;
-            if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance) //dealer has reached Player
+            //enemy.Agent.stoppingDistance = 2.5f;
+            if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < 1.5f) //dealer has reached Player
             {
-                enemy.Agent.speed = 0f;
-                Debug.Log("Dealer has shot you");
                 TMP_Text statusText = enemy.Player.GetComponentInChildren<TMP_Text>();
-                statusText.text = "You have been shot!";
-                enemy.Player.GetComponent<CharacterController>().enabled = false;
+                enemy.Player.GetComponent<InputManager>().Caught();
+                statusText.text = "You have been caught!";
+                //enemy.Player.GetComponent<CharacterController>().enabled = false;
                 enemy.Player.GetComponent<InputManager>().OnDisable();
+                enemy.Player.GetComponent<InputManager>().enabled = false; //disables the LateUpdate() of the inputmanager, which overwrites the rotation of the camera to the input (which would be zero rotation called late every frame)
                 Time.timeScale = 0.1f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale; // ensures physics still work
-                enemy.Player.GetComponent<GamePlayerLook>().PanCamera(enemy.transform);
+                stateMachine.ChangeState(new StopState());
+                Transform childTransform = enemy.transform.Find("Dealer");
+                enemy.Player.GetComponent<PlayerLook>().PanCamera(childTransform);
+                enemy.PanEnemy();
+
             }
+            enemy.LastKnownPos = enemy.Player.transform.position;
         }
-        else
+        else //lost sight of player
         {
+            enemy.Agent.SetDestination(enemy.LastKnownPos);
             losePlayerTimer += Time.deltaTime;
-            if (losePlayerTimer > 8)
+            if (enemy.Agent.remainingDistance < 0.2f)
             {
                 //change to search state
-                stateMachine.ChangeState(new PatrolState());
+                stateMachine.ChangeState(new SearchState());
             }
         }
     }

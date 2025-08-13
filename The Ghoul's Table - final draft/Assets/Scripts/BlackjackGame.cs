@@ -10,6 +10,7 @@ public class BlackjackGame
     private Hand playerHand;
     private Hand dealerHand;
     private bool playerStood = false;
+    private string firstdrawn;
 
     public Hand GetPlayerHand()
     {

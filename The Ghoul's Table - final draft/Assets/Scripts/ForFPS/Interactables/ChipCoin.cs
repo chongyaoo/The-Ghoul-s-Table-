@@ -10,12 +10,11 @@ public class ChipCoin : GameInteractable
     {
         if (gameManager.GameState == GameState.Betting)
         {
-            promptText.text = "Lock In Bets!";
-            Debug.Log("Able to Lock in Bets");
+            promptText.text = "Lock in bets";
         }
         else if (gameManager.GameState == GameState.EndGameWin)
         {
-            promptText.text = "Keep Winnings!";
+            promptText.text = "Keep Winnings";
         }
     }
 

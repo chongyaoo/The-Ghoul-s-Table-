@@ -14,7 +14,7 @@ public class Coinbag : GameInteractable
     public override void Hover()
     {
         if (gameManager.GameState == GameState.Betting)
-            promptText.text = "Bet 20 bucks!";
+            promptText.text = "Bet $20";
     }
 
     protected override void Interact()

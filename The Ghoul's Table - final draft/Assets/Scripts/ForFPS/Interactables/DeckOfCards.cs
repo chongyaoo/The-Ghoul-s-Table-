@@ -12,7 +12,7 @@ public class DeckOfCards : GameInteractable
     public override void Hover()
     {
         if (gameManager.GameState == GameState.Waiting)
-            promptText.text = "Hit!";
+            promptText.text = "Hit";
     }
 
     protected override void Interact()

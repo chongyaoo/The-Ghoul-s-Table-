@@ -44,7 +44,13 @@ public enum GameState
     Waiting, 
     EndGameWin,
     EndGameLose,
-    EndGamePush
+    EndGamePush,
+    EndGameShotFail,
+    EndGameShotKill, 
+    PlayerDied,
+    DealerDied,
+    Pause, 
+    Shooting
 }
 
 public static class OutcomeText

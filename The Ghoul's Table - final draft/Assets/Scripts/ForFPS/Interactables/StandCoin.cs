@@ -13,7 +13,7 @@ public class StandCoin: GameInteractable
     public override void Hover()
     {
         if (gameManager.GameState == GameState.Waiting)
-            promptText.text = "Stand!";
+            promptText.text = "Stand";
     }
 
     protected override void Interact()

@@ -46,6 +46,20 @@ public class Deck
         return top;
     }
 
+    public Card DrawCard (Suit suit, Rank rank)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i].Suit == suit && cards[i].Rank == rank)
+            {
+                Card card = cards[i];
+                cards.RemoveAt(i);
+                return card;
+            }
+        }
+        return null;
+    }
+
     public int CardsRemaining()
     {
         return cards.Count;
