@@ -106,6 +106,7 @@
     <Compile Include="Assets\LeanTween\Testing\PerformanceTests.cs" />
     <Compile Include="Assets\Shooting\Script\Player\GameScenePlayerInteract.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenuStart.cs" />
+    <Compile Include="Assets\Scripts\LightFlicker.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTween.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\FencePlacement.cs" />
     <Compile Include="Assets\Scripts\ForFPS\GameInputManager.cs" />
@@ -123,7 +124,9 @@
     <Compile Include="Assets\Scripts\ForFPS\Interactables\Coinbag.cs" />
     <Compile Include="Assets\Scripts\ForFPS\Interactables\ChipCoin.cs" />
     <Compile Include="Assets\Fries and Seagull\Bar 02\Scene Props\Scripts\Rotatable.cs" />
+    <Compile Include="Assets\Scripts\ReturnBtn.cs" />
     <Compile Include="Assets\Scripts\KeepWinnings.cs" />
+    <Compile Include="Assets\Scripts\InstructionsBtn.cs" />
     <Compile Include="Assets\Scripts\DeckManager.cs" />
     <Compile Include="Assets\Scripts\CardEnums.cs" />
     <Compile Include="Assets\Scripts\StandButton.cs" />
@@ -140,6 +143,7 @@
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralAdvancedTechniques.cs" />
     <Compile Include="Assets\Scripts\Enemy\StateMachine.cs" />
     <Compile Include="Assets\Model\DealerScript.cs" />
+    <Compile Include="Assets\Scripts\TestCases.cs" />
     <Compile Include="Assets\Shooting\Script\Player\PlayerMotor.cs" />
     <Compile Include="Assets\Scripts\Enemy\WayPath.cs" />
     <Compile Include="Assets\Scripts\ForFPS\Interactables\DeckOfCards.cs" />
