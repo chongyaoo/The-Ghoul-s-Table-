@@ -38,6 +38,8 @@ public class BlackjackGameManager : MonoBehaviour
 
     [SerializeField] private Animator coltAnimator;
 
+    [SerializeField] private GameObject gameOverCanvas;
+
     private BlackjackOutcome blackjackOutcome;
     public BlackjackOutcome BlackjackOutcome => blackjackOutcome;
 
@@ -163,6 +165,7 @@ public class BlackjackGameManager : MonoBehaviour
         //EnableButton(false);
         EnableNewGameButton(false);
         EnableGameMainMenuButton(false);
+        gameOverCanvas.SetActive(false);
         //EnableBets(true); //StartRound() is in PlayerLockBets(), because round starts only after bets are placed
         //lockInBetsButton.interactable = false;
         // EnableWinChoices(false);
@@ -170,8 +173,7 @@ public class BlackjackGameManager : MonoBehaviour
         gameState = GameState.Betting;
         statusText.text = "Minimum Bet: $20";
         if (betManager.PlayerWinnings == 0)
-            Debug.Log("player has died here");
-
+            PlayerDies();
     }
 
     public void PlayerBet()
@@ -424,6 +426,7 @@ public class BlackjackGameManager : MonoBehaviour
         EnableNewGameButton(false);
         EnableGameMainMenuButton(true);
         gameState = GameState.PlayerDied;
+        gameOverCanvas.SetActive(true);
     }
 
     private void PlayerWins()
